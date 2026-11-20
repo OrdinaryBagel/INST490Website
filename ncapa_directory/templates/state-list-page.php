@@ -12,6 +12,14 @@
 <head>
 </head>
 <body>
+   <div class = "zipdiv">
+      <h1>Enter Your Zipcode To Find your Senator</h1>
+      <form action="<?php echo esc_url(home_url('/')); ?>" method="get">
+    <input type="text" name="ncapa_zip" maxlength="5"
+           inputmode="numeric" pattern="\d{5}" required>
+    <button type="submit">Find</button>
+</form>
+   </div>
       <div class = "splitPage" id = "splitPage">
          <div class = "half left">
             <H1>Find Your Congressmen</H1>

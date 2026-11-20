@@ -2,52 +2,6 @@ const ncapaState = {
     currentState: null,
     members: [],
 };
-const SVG_NS = "http://www.w3.org/2000/svg";
-const LABEL_OVERRIDES = {
-    MI: { x: 762, y: 180 },                         
-    FL: { x: 830, y: 468 },                          
-    AK: { x: 105, y: 505 },
-    HI: { x: 365, y: 528 },
-    ME: { x: 957, y: 80 },
-    VT: { size: 8 },
-    NH: { size: 8 },
-    MA: { x: 985, y: 134, size: 9, leader: true },
-    RI: { x: 985, y: 152, size: 9, leader: true },
-    CT: { x: 975, y: 172, size: 9, leader: true },
-    NJ: { x: 938, y: 198, size: 9, leader: true },
-    DE: { x: 932, y: 218, size: 9, leader: true },
-    MD: { x: 930, y: 238, size: 9, leader: true },
-    DC: { x: 925, y: 258, size: 9, leader: true },
-};
-function addStateLabels() {
-    const layer = document.createElementNS(SVG_NS, "g");
-    layer.id = "state-labels";
-    svg.appendChild(layer);
-    svg.querySelectorAll("path.state").forEach(path => {
-        const box = path.getBBox();
-        const cx = box.x + box.width / 2;
-        const cy = box.y + box.height / 2;
-        const o = LABEL_OVERRIDES[path.id] || {};
-        const x = o.x ?? cx;
-        const y = o.y ?? cy;
-        if (o.leader) {
-            const line = document.createElementNS(SVG_NS, "line");
-            line.setAttribute("class", "state-leader");
-            line.setAttribute("x1", cx);
-            line.setAttribute("y1", cy);
-            line.setAttribute("x2", x - 8);
-            line.setAttribute("y2", y);
-            layer.appendChild(line);
-        }
-        const text = document.createElementNS(SVG_NS, "text");
-        text.setAttribute("class", "state-label");
-        text.setAttribute("x", x);
-        text.setAttribute("y", y);
-        if (o.size) text.style.fontSize = o.size + "px";
-        text.textContent = path.id;
-        layer.appendChild(text);
-    });
-}
 
 const PLACEHOLDER_IMG =
     "data:image/svg+xml;utf8," +
@@ -122,7 +76,7 @@ function renderHouseMembers(allMembers) {
         const img = document.createElement("img");
         img.className = "member-photo";
         img.alt = `${m.first_name} ${m.last_name}`;
-        img.src = m.photo_url || PLACEHOLDER_IMG;
+        img.src = `https://unitedstates.github.io/images/congress/225x275/${m.bioguide_id}.jpg` || PLACEHOLDER_IMG;
         img.addEventListener("error", () => {
             img.src = PLACEHOLDER_IMG;
         }, { once: true });
@@ -179,7 +133,7 @@ function renderSenateMembers(allMembers) {
         const img = document.createElement("img");
         img.className = "member-photo";
         img.alt = `${m.first_name} ${m.last_name}`;
-        img.src = m.photo_url || PLACEHOLDER_IMG;
+        img.src = `https://unitedstates.github.io/images/congress/225x275/${m.bioguide_id}.jpg` || PLACEHOLDER_IMG;
         img.addEventListener("error", () => {
             img.src = PLACEHOLDER_IMG;
         }, { once: true });

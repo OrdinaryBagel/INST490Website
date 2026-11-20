@@ -13,6 +13,9 @@ function ncapa_hello() {
 
 add_shortcode('ncapa_test', 'ncapa_hello');
 function ncapa_is_map_page() {
+    if (isset($_GET['ncapa_zip'])) {
+    return false;
+    }
     if (is_admin()) {
         return false;
     }
@@ -28,7 +31,10 @@ function ncapa_is_states_page() {
     if (isset($_GET['ncapa_state'])) {
         return false; // individual state pages take priority
     }
-    return isset($_GET['ncapa_states']);
+    return isset($_GET['ncapa_state']);
+}
+function ncapa_is_zip_page() {
+    return !is_admin() && isset($_GET['ncapa_zip']);
 }
 /**
  * Database connection for ncapa
@@ -98,6 +104,11 @@ add_action('rest_api_init', function() {
         'permission_callback' => '__return_true',
         ]
     );
+    register_rest_route('ncapa/v1', '/zip/(?P<zip>\d{5})', [
+    'methods'             => 'GET',
+    'callback'            => 'ncapa_get_zip',
+    'permission_callback' => '__return_true',
+    ]);
 });
 
 function ncapa_get_all_states(WP_REST_Request $request) {
@@ -136,7 +147,47 @@ function ncapa_get_all_states(WP_REST_Request $request) {
         'states' => $states
     ], 200);
 }
-
+function ncapa_get_zip(WP_REST_Request $request){
+    $zipcode = $request['zip'];
+    $db = new wpdb(
+        NCAPA_DB_USER,
+        NCAPA_DB_PASSWORD,
+        NCAPA_DB_NAME,
+        NCAPA_DB_HOST
+    );
+    if (!$db->ready) {
+    return new WP_Error('db_error', 'Unable to connect to db', ['status' => 500]);
+    }
+    $members = $db->get_results(
+        $db->prepare(
+            "SELECT z.zip, m.first_name, m.last_name, m.bioguide_id, m.website, m.phone, m.office, s.state_code, z.district 
+            FROM members m
+            LEFT JOIN states s
+                ON m.state_id = s.state_id
+			LEFT JOIN zipcodes z
+				on s.state_code = z.state
+			LEFT JOIN districts d
+				on d.district_id = m.district_id
+			WHERE z.zip = %s and z.district = d.district_number",
+            $zipcode
+        ),
+        ARRAY_A
+    );
+    if ($db->last_error) {
+        return new WP_Error(
+            'database_error',
+            'Unable to retrieve members: ' . $db->last_error,
+            ['status' => 500]
+        );
+    }
+    if (!$members) {
+    return new WP_Error('zip_not_found', 'No districts found for this ZIP.', ['status' => 404]);
+    }
+    // returns as json object 
+    return new WP_REST_Response([
+        'members' => $members
+    ], 200);
+}
 function ncapa_get_population(WP_REST_Request $request) {
     // transform sent state code to upper case 
     $state_code = strtoupper($request['state_code']);
@@ -286,6 +337,9 @@ add_filter('template_include', function($template) {
     if (ncapa_is_map_page()) {
         return plugin_dir_path(__FILE__) . 'templates/state-list-page.php';
     }
+    if (ncapa_is_zip_page()) {
+        return plugin_dir_path(__FILE__) . 'templates/ZipPage.php';
+    }
 
     return $template;
 });
@@ -328,6 +382,24 @@ add_action('wp_enqueue_scripts', function() {
         );
         wp_localize_script('ncapa-state-js', 'NCAPA', [
         'restUrl' => esc_url_raw(rest_url('ncapa/v1/')),
+        ]);
+    }
+    if (ncapa_is_zip_page()) {
+    wp_enqueue_style(
+            'ncapa-zip-css',
+            plugin_dir_url(__FILE__) . 'assets/css/ZipPage.css',
+            [],
+            '1.0'
+        );
+    wp_enqueue_script(
+            'ncapa-zip-js',
+            plugin_dir_url(__FILE__) . 'js/ZipCode.js',
+            [],
+            filemtime(plugin_dir_path(__FILE__) . 'js/ZipCode.js'),
+            true
+        );
+        wp_localize_script('ncapa-zip-js', 'NCAPA', [
+            'restUrl' => esc_url_raw(rest_url('ncapa/v1/')),
         ]);
     }
 
