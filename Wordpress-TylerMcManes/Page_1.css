@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+path.state {
+    stroke: white;
+    fill: lightgrey !important;
+
+    transition: fill .4s ease;
+}
+
+path:hover {
+    fill: orange !important;
+}
+
+#us-map {
+    width: 100%;
+    height: 100%;
+}
+
+#details-box {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 24px;
+    position: fixed;
+    color: white;
+    font-family: "Poppins";
+    background-color: black;
+    width: fit-content;
+    transform: translateX(-50%);
+    transition: opacity .4s ease;
+    z-index: 1;
+}
+
+#splitPage {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 48px);
+}
+
+.half {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: auto;
+    transition: width 0.4s ease;
+}
+
+.left {
+    background: #F5F5F5;
+}
+
+.right {
+    display: none;
+}
+
+
+#splitPage.split .left {
+    width: 100%;
+}
+
+
+#splitPage.split .right {
+    display: none;
+}
+
+#us-map path.selected,
+path.state.selected {
+    fill: darkblue !important;
+}
+
+svg text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+svg line,
+svg path:not(.state) {
+    pointer-events: none;
+}
+
+svg text,
+svg tspan {
+    font-family: Arial, sans-serif !important;
+    font-weight: 500 !important;
+    fill: #16365C !important;
+    stroke: none !important;
+    stroke-width: 0 !important;
+    font-weight: 600 !important;
+}
+
+/* Members of Congress Container */
+.congress-directory {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+}
+
+.congress-directory h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1e3a5f;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.congress-section {
+    margin-bottom: 45px;
+}
+
+.congress-directory .section-title {
+    font-size: 25px;
+    font-weight: 600;
+    color: #1e3a5f;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.congress-directory .representative {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.congress-directory .representative:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.member-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.member-photo {
+    width: 100px;
+    height: 125px;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.member-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.congress-directory .member-heading h4 {
+    font-size: 21px;
+    font-weight: 600;
+    color: #1e3a5f;
+    margin: 0 0 10px;
+}
+
+.congress-directory .member-heading p {
+    font-size: 15px;
+    color: #555;
+    margin: 5px 0;
+}
+
+.member-details {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 15px;
+}
+
+.congress-directory .member-details p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+.congress-directory .member-details strong {
+    color: #222;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .congress-directory {
+        padding: 10px;
+    }
+
+    .members-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .congress-directory h2 {
+        font-size: 24px;
+    }
+
+    .congress-directory .section-title {
+        font-size: 21px;
+    }
+
+    .congress-directory .representative {
+        padding: 18px;
+    }
+
+    .member-photo {
+        width: 80px;
+        height: 100px;
+    }
+
+    .congress-directory .member-heading h4 {
+        font-size: 18px;
+    }
+}
+
+.congress-directory .members-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.congress-directory .representative {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.congress-directory .member-photo {
+    width: 150px;
+    height: 190px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f1f1f1;
+    margin-bottom: 12px;
+}
+
+.congress-directory .member-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.congress-directory .member-name {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.congress-directory .member-district {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .congress-directory .members-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .congress-directory .members-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Demographics Container */
+.demographics-section {
+    margin: 30px 0 40px;
+}
+
+.demographics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.demographic-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 25px 15px;
+    text-align: center;
+}
+
+.demographic-value {
+    color: #16365C;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+}
+
+.demographic-label {
+    color: #555555;
+    font-size: 15px;
+}
+
+.demographics-source {
+    font-size: 12px;
+    color: #777777;
+    margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+    .demographics-grid {
+        grid-template-columns: 1fr;
+    }
+}
